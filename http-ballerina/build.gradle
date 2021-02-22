@@ -294,9 +294,9 @@ task ballerinaPublish {
                 workingDir project.projectDir
                 environment "JAVA_OPTS", "-DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true"
                 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                    commandLine 'cmd', '/c', "$distributionBinPath/bal.bat push ${packageName} && exit %%ERRORLEVEL%%"
+                    commandLine 'cmd', '/c', "$distributionBinPath/bal.bat push && exit %%ERRORLEVEL%%"
                 } else {
-                    commandLine 'sh', '-c', "$distributionBinPath/bal push ${packageName}"
+                    commandLine 'sh', '-c', "$distributionBinPath/bal push"
                 }
             }
         } else {
@@ -310,24 +310,24 @@ task createArtifactZip(type: Zip) {
     from ballerinaBuild
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifact source: createArtifactZip, extension: 'zip'
-        }
-    }
-
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ballerina-platform/module-${packageOrg}-${packageName}")
-            credentials {
-                username = System.getenv("packageUser")
-                password = System.getenv("packagePAT")
-            }
-        }
-    }
-}
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            artifact source: createArtifactZip, extension: 'zip'
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/ballerina-platform/module-${packageOrg}-${packageName}")
+//            credentials {
+//                username = System.getenv("packageUser")
+//                password = System.getenv("packagePAT")
+//            }
+//        }
+//    }
+//}
 
 ballerinaBuild.dependsOn ":${packageName}-native:build"
 unpackJballerinaTools.dependsOn copyToLib
